@@ -8,7 +8,7 @@ const collectionRef = db.collection(collectionName)
 export const initialState = {
     hasFetch: false,
     status: 'idle',
-    data: null,
+    data: [],
 }
 
 export const psikotesSlice = createSlice({
@@ -29,20 +29,25 @@ export const psikotesSlice = createSlice({
     },
     deleteSuccess: (state, {payload}) => {
         state.status = "success"
-        state.data.splice(payload,1)
+        var foundIndex = state.data.findIndex(x => x.id === payload);
+        state.data.splice(foundIndex,1)
+    },
+    createSuccess: (state, {payload}) => {
+        state.status = "success"
+        state.data.push(payload)
     },
     updateSuccess: (state, {payload}) => {
         state.status = "success"
         if(state.hasFetch){
-            const {data, docId} = payload
-            var foundIndex = state.data.findIndex(x => x.id === docId);
+            const {data} = payload
+            var foundIndex = state.data.findIndex(x => x.id === data.id);
             state.data[foundIndex] = data;
         }
     },
   },
 });
 
-export const { get, getSuccess, getFailure, deleteSuccess, updateSuccess } = psikotesSlice.actions
+export const { get, getSuccess, getFailure, deleteSuccess, updateSuccess, createSuccess } = psikotesSlice.actions
 
 export const getData = state => state[collectionName].data
 export const hasFetch = state => state[collectionName].hasFetch
@@ -68,19 +73,23 @@ export function fetchData() {
         })
     }
 }
-export function deleteData(docId, key) {
+export function deleteData(docId) {
     return async dispatch => {
         collectionRef.doc(docId).delete().then(() => {
             console.log("success")
-            dispatch(deleteSuccess(key))
+            dispatch(deleteSuccess(docId))
         }).catch(err => {
             console.log("error: ",err)
         })
     }
 }
 export function createData({data}) {
-    return async () => {
-        collectionRef.add(data).then(() => {
+    return async dispatch => {
+        collectionRef.add(data).then((doc) => {
+            const newData = {
+                id: doc.id, ...data
+            }
+            dispatch(createSuccess(newData))
             console.log("success")
         }).catch(err => {
             console.log("error: ",err)
@@ -93,10 +102,10 @@ export function getDatabyId(docId) {
         return data
     }
 }
-export function updateData({docId, data}) {
+export function updateData({data}) {
     return async dispatch => {
-        collectionRef.doc(docId).update(data).then(() => {
-            dispatch(updateSuccess({data, docId}))
+        collectionRef.doc(data.id).update(data).then(() => {
+            dispatch(updateSuccess({data}))
         }).catch(err => {
             console.log("error: ",err)
         })

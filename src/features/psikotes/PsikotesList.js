@@ -7,7 +7,7 @@ import {confirmAlert} from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 
 export default function PsikotesList() {
-    const path = "/materi/document"
+    const path = "/psikotes"
     const dispatch = useDispatch();
     // dispatch our thunk when component first mounts
     const hasFetching = useSelector(hasFetch)
@@ -19,7 +19,7 @@ export default function PsikotesList() {
     const dataDocument = useSelector(getData)
     let content = <tr><td colSpan="6">No data</td></tr>
 
-    const onDelete = (docId, key) => {
+    const onDelete = (docId) => {
         console.log(docId)
         confirmAlert({
             title: "Are you sure?",
@@ -27,7 +27,7 @@ export default function PsikotesList() {
             buttons: [
                 {
                   label: 'Yes',
-                  onClick: () => dispatch(deleteData(docId, key))
+                  onClick: () => dispatch(deleteData(docId))
                 },
                 {
                   label: 'No',
@@ -41,18 +41,13 @@ export default function PsikotesList() {
             <tr key={key}>
                 <td>{key+1}</td>
                 <td>{item.nama}</td>
-                <td width="120">
-                    <a href={item.path} target="_blank" rel="noopener noreferrer" download>
-                        <span className="btn btn-sm btn-danger">
-                            <i className="fa fa-file-pdf" aria-hidden="true"></i> donwload
-                        </span>
-                    </a>
-                </td>
+                <td>{item.author}</td>
+                <td className="text-right py-0 align-middle" width="130">
+                    <Link to={`/section/${item.id}`} className="btn btn-info">Kelola Soal</Link></td>
                 <td className="text-right py-0 align-middle" width="100">
                     <div className="btn-group btn-group-sm">
                         <Link to={`${path}/update/${item.id}`} className="btn btn-success"><i className="fa fa-pencil-alt" /></Link>
-                        <Link to={`${path}`} className="btn btn-info"><i className="fa fa-eye" /></Link>
-                        <button onClick={() => onDelete(item.id, key)} className="btn btn-danger"><i className="fas fa-trash" /></button>
+                        <button onClick={() => onDelete(item.id)} className="btn btn-danger"><i className="fas fa-trash" /></button>
                     </div>
                 </td>
             </tr>
@@ -69,9 +64,10 @@ export default function PsikotesList() {
                 <table className="table table-bordered">
                     <thead>
                         <tr>
-                            <th>NO</th>
-                            <th>NAMA</th>
-                            <th>File</th>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>Author</th>
+                            <th>Soal</th>
                             <th>#</th>
                         </tr>
                     </thead>
