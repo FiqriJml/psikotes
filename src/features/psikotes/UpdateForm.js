@@ -22,8 +22,8 @@ export default function UpdateForm({match}) {
     const onSubmit = (e) => {
         e.preventDefault()
         setsaving(true)
-        const data = { nama, id:docId }
-        dispatch(updateData({data})).then(()=> {
+        const data = { nama }
+        dispatch(updateData({data, docId})).then(()=> {
           setsaving(false)
           history.push(parentPath)
         });

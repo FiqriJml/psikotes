@@ -5,14 +5,18 @@ const db = firebase.firestore()
 const collectionName = 'psikotes'
 const collectionRef = db.collection(collectionName)
 
+const subCollectionName = 'section'
+const dataName = subCollectionName
+
 export const initialState = {
     hasFetch: false,
     status: 'idle',
     data: [],
+    [collectionName]: [],
 }
 
 export const psikotesSlice = createSlice({
-  name: collectionName,
+  name: dataName,
   initialState,
   reducers: {
     get: state => {
@@ -22,6 +26,9 @@ export const psikotesSlice = createSlice({
         state.hasFetch = true
         state.data = payload
         state.status = "success"
+    },
+    getColSuccess: (state, { payload }) => {
+        state[collectionName] = payload
     },
     getFailure: (state, action) => {
         state.status = "failure"
@@ -47,35 +54,43 @@ export const psikotesSlice = createSlice({
   },
 });
 
-export const { get, getSuccess, getFailure, deleteSuccess, updateSuccess, createSuccess } = psikotesSlice.actions
+export const { get, getSuccess, getFailure, deleteSuccess, updateSuccess, createSuccess, getColSuccess } = psikotesSlice.actions
 
-export const getData = state => state[collectionName].data
-export const hasFetch = state => state[collectionName].hasFetch
+export const getData = state => state[dataName].data
+export const getColData = state => state[dataName][collectionName]
+export const hasFetch = state => state[dataName].hasFetch
 
 export default psikotesSlice.reducer;
 
 // Asynchronous thunk action
-export function fetchData() {
+export function fetchData(colId) {
     return async dispatch => {
         dispatch(get())
-        collectionRef.get().then( querySnapshot => {
-            const data = []
-            querySnapshot.forEach(function(doc) {
-                const tmp = {
-                    id: doc.id, ...doc.data()
-                }
-                data.push(tmp)
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        collectionRef.doc(colId).get().then( (colDoc) => {
+            const colData = colDoc.data()
+            dispatch(getColSuccess(colData))
+            dbRef.get().then( querySnapshot => {
+                const data = []
+                querySnapshot.forEach(function(doc) {
+                    const tmp = {
+                        id: doc.id, ...doc.data()
+                    }
+                    data.push(tmp)
+                })
+                dispatch(getSuccess(data))
+            }).catch( error => {    
+                dispatch(getFailure(error))
+                console.log("Error getting cached document:", error);
             })
-            dispatch(getSuccess(data))
-        }).catch( error => {    
-            dispatch(getFailure(error))
-            console.log("Error getting cached document:", error);
         })
+        
     }
 }
-export function deleteData(docId) {
+export function deleteData(colId, docId) {
     return async dispatch => {
-        collectionRef.doc(docId).delete().then(() => {
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        dbRef.doc(docId).delete().then(() => {
             console.log("success")
             dispatch(deleteSuccess(docId))
         }).catch(err => {
@@ -83,9 +98,10 @@ export function deleteData(docId) {
         })
     }
 }
-export function createData({data}) {
+export function createData({data, colId}) {
     return async dispatch => {
-        collectionRef.add(data).then((doc) => {
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        dbRef.add(data).then((doc) => {
             const newData = {
                 id: doc.id, ...data
             }
@@ -96,15 +112,17 @@ export function createData({data}) {
         })
     }
 }
-export function getDatabyId(docId) {
+export function getDatabyId(colId, docId) {
     return async () => {
-        const data = (await collectionRef.doc(docId).get()).data()
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        const data = (await dbRef.doc(docId).get()).data()
         return data
     }
 }
-export function updateData({data, docId}) {
+export function updateData({data, docId, colId}) {
     return async dispatch => {
-        collectionRef.doc(docId).update(data).then(() => {
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        dbRef.doc(docId).update(data).then(() => {
             const newData = {
                 id: docId, ...data
             }
