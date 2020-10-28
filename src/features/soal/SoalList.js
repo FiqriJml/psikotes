@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {deleteData, fetchData, getColData, getData} from "./soalSlice"
+import {deleteContoh, fetchData, getColData, getData} from "./soalSlice"
 
 import {confirmAlert} from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
@@ -22,14 +22,15 @@ export default function SoalList({match}) {
     const dataContoh = dataSection.contoh
     const dataCol = useSelector(getColData)
 
-    const onDelete = (docId) => {
+    const onDeleteContoh = (index) => {
+        console.log(index)
         confirmAlert({
             title: "Are you sure?",
             message: "You want to delete this file?",
             buttons: [
                 {
                   label: 'Yes',
-                  onClick: () => dispatch(deleteData(colId, docId))
+                  onClick: () => dispatch(deleteContoh(colId, docId, index))
                 },
                 {
                   label: 'No',
@@ -51,8 +52,8 @@ export default function SoalList({match}) {
                 <div className="row">
                     <div className="mr-auto"></div>
                     <div className="btn-group btn-group-sm pb-2">
-                        <Link to={`#update`} className="btn btn-sm btn-info"><i className="fa fa-pencil-alt" /></Link>
-                        <button className="btn btn-sm btn-info"><i className="fas fa-trash" /></button>
+                        <Link to={`${path}/update-contoh/${i}`} className="btn btn-sm btn-info"><i className="fa fa-pencil-alt" /></Link>
+                        <button onClick={() => onDeleteContoh(i)} className="btn btn-sm btn-info"><i className="fas fa-trash" /></button>
                     </div>
                 </div>
                 <table>

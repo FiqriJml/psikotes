@@ -34,27 +34,30 @@ export const soalSlice = createSlice({
         state.status = "failure"
         state.error = action.payload
     },
+    updateContohSuccess: (state, {payload}) => {
+        state.status = "success"
+        state.data.contoh = payload
+    },
+    updateSoalSuccess: (state, {payload}) => {
+        state.status = "success"
+        state.data.soal = payload
+    },
+
+
+    
     deleteSuccess: (state, {payload}) => {
         state.status = "success"
-        var foundIndex = state.data.findIndex(x => x.id === payload);
-        state.data.splice(foundIndex,1)
+        state.data.contoh = payload
     },
     createSuccess: (state, {payload}) => {
         state.status = "success"
         state.data.push(payload)
     },
-    updateSuccess: (state, {payload}) => {
-        state.status = "success"
-        if(state.hasFetch){
-            const data = payload
-            var foundIndex = state.data.findIndex(x => x.id === data.id);
-            state.data[foundIndex] = data;
-        }
-    },
   },
 });
 
-export const { get, getSuccess, getFailure, deleteSuccess, updateSuccess, createSuccess, getColSuccess } = soalSlice.actions
+export const { get, getSuccess, getFailure, deleteSuccess, updateSuccess, createSuccess, getColSuccess, 
+    updateContohSuccess, updateSoalSuccess } = soalSlice.actions
 
 export const getData = state => state[dataName].data
 export const getColData = state => state[dataName][collectionName]
@@ -82,12 +85,14 @@ export function fetchData(colId, docId) {
         
     }
 }
-export function deleteData(colId, docId) {
+export function deleteContoh(colId, docId, index) {
     return async dispatch => {
         const dbRef = collectionRef.doc(colId).collection(subCollectionName)
-        dbRef.doc(docId).delete().then(() => {
-            console.log("success")
-            dispatch(deleteSuccess(docId))
+        const contoh = (await dbRef.doc(docId).get()).data().contoh
+        contoh.splice(index,1)
+        dbRef.doc(docId).update({contoh}).then(() => {
+            dispatch(updateContohSuccess({contoh}))
+            console.log("berhasil")
         }).catch(err => {
             console.log("error: ",err)
         })
@@ -98,32 +103,35 @@ export function createContoh({data, colId, docId}) {
         const dbRef = collectionRef.doc(colId).collection(subCollectionName)
         const contoh = (await dbRef.doc(docId).get()).data().contoh || []
         contoh.push(data)
-        console.log(contoh) 
         dbRef.doc(docId).update({contoh}).then(() => {
+            dispatch(updateContohSuccess({contoh}))
             console.log("berhasil")
         })
     }
 }
-export function getDatabyId(colId, docId) {
+export function getContohByIndex(colId, docId, index) {
     return async () => {
         const dbRef = collectionRef.doc(colId).collection(subCollectionName)
-        const data = (await dbRef.doc(docId).get()).data()
-        return data
+        const contoh = (await dbRef.doc(docId).get()).data().contoh[index]
+        return contoh
     }
 }
-export function updateData({data, docId, colId}) {
+export function updateContoh({data, colId, docId, index}) {
     return async dispatch => {
         const dbRef = collectionRef.doc(colId).collection(subCollectionName)
-        dbRef.doc(docId).update(data).then(() => {
-            const newData = {
-                id: docId, ...data
-            }
-            dispatch(updateSuccess(newData))
-        }).catch(err => {
-            console.log("error: ",err)
+        let contoh = (await dbRef.doc(docId).get()).data().contoh
+        contoh[index] = data
+        dbRef.doc(docId).update({contoh}).then(() => {
+            dispatch(updateContohSuccess({contoh}))
+            console.log("berhasil")
         })
     }
 }
+
+
+
+
+
 export const uploadFile = (props) => {
     const {fileDocument, fileName} = props
     const path = `materi/${fileName}`
