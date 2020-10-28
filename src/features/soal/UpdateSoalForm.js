@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { createSoal } from "./soalSlice";
+import { getSoalByIndex, updateSoal } from "./soalSlice";
 
-export default function CreateSoalForm({match}) {
-  const {colId, docId} = match.params
+export default function UpdateSoalForm({match}) {
+  const {colId, docId, index} = match.params
   const root_path = `/section/${colId}/soal/${docId}`
   const [pertanyaan, setpertanyaan] = useState("");
   const [opsi, setopsi] = useState(["","","","",""]);
@@ -14,6 +14,16 @@ export default function CreateSoalForm({match}) {
 
   const dispatch = useDispatch();
   const history = useHistory();
+  
+  useEffect(() => {
+    dispatch(getSoalByIndex(colId, docId, index)).then((data) => {
+        const {pertanyaan, opsi, kunci} = data
+        setpertanyaan(pertanyaan)
+        setopsi(opsi)
+        setkunci(kunci)
+    })
+}, [colId, docId, index, dispatch])
+
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -24,7 +34,7 @@ export default function CreateSoalForm({match}) {
     console.log(data)
     // save soal
 
-    dispatch(createSoal({ data, colId, docId })).then(()=> {
+    dispatch(updateSoal({ data, colId, docId, index })).then(()=> {
       setsaving(false)
       history.push(root_path);
     });
@@ -51,7 +61,7 @@ export default function CreateSoalForm({match}) {
       <form className="form-horizontal" onSubmit={onSubmit}>
         <div className="card-body">
           <div className="form-group row">
-            <label htmlFor="pertanyaan" className="col-sm-2 col-form-label">
+            <label htmlFor="batas_waktu" className="col-sm-2 col-form-label">
               Pertanyaan
             </label>
             <div className="col-sm-10">
@@ -69,7 +79,7 @@ export default function CreateSoalForm({match}) {
           {
             opsi && opsi.map((item, i) => (
               <div className="form-group row" key={i}>
-                <label htmlFor={`opsi_${i+1}`} className="col-sm-2 col-form-label">
+                <label htmlFor="batas_waktu" className="col-sm-2 col-form-label">
                   Opsi {i+1}
                 </label>
                 <div className="col-sm-10">
@@ -82,27 +92,27 @@ export default function CreateSoalForm({match}) {
                 </div>
               </div>
             ))
-        }
-          <div className="form-group row">
-            <label htmlFor="kunci" className="col-sm-2 col-form-label">
-              Kunci Jawaban 
-            </label>
-            <div className="col-sm-10">
-              <select className="form-control" 
-                placeholder="Kunci Jawaban"
-                value={kunci} onChange={(e) =>{ 
-                  onEnter(e)
-                  setkunci(e.target.value)
-                }}>
-                <option value="" disabled>-pilih-</option>
-                <option value="a">a</option>
-                <option value="b">b</option>
-                <option value="c">c</option>
-                <option value="d">d</option>
-                <option value="e">e</option>
-              </select>
+            }
+            <div className="form-group row">
+                <label htmlFor="kunci" className="col-sm-2 col-form-label">
+                Kunci Jawaban 
+                </label>
+                <div className="col-sm-10">
+                <select className="form-control" 
+                    placeholder="Kunci Jawaban"
+                    value={kunci} onChange={(e) =>{ 
+                    onEnter(e)
+                    setkunci(e.target.value)
+                    }}>
+                    <option value="" disabled>-pilih-</option>
+                    <option value="a">a</option>
+                    <option value="b">b</option>
+                    <option value="c">c</option>
+                    <option value="d">d</option>
+                    <option value="e">e</option>
+                </select>
+                </div>
             </div>
-          </div>
         </div>
         {/* /.card-body */}
         <div className="card-footer">

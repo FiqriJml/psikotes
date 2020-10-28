@@ -36,27 +36,20 @@ export const soalSlice = createSlice({
     },
     updateContohSuccess: (state, {payload}) => {
         state.status = "success"
-        state.data.contoh = payload
+        if(hasFetch){ 
+            state.data.contoh = payload
+        }
     },
     updateSoalSuccess: (state, {payload}) => {
         state.status = "success"
-        state.data.soal = payload
-    },
-
-
-    
-    deleteSuccess: (state, {payload}) => {
-        state.status = "success"
-        state.data.contoh = payload
-    },
-    createSuccess: (state, {payload}) => {
-        state.status = "success"
-        state.data.push(payload)
+        if(hasFetch){ 
+            state.data.soal = payload
+        }
     },
   },
 });
 
-export const { get, getSuccess, getFailure, deleteSuccess, updateSuccess, createSuccess, getColSuccess, 
+export const { get, getSuccess, getFailure, getColSuccess, 
     updateContohSuccess, updateSoalSuccess } = soalSlice.actions
 
 export const getData = state => state[dataName].data
@@ -91,7 +84,20 @@ export function deleteContoh(colId, docId, index) {
         const contoh = (await dbRef.doc(docId).get()).data().contoh
         contoh.splice(index,1)
         dbRef.doc(docId).update({contoh}).then(() => {
-            dispatch(updateContohSuccess({contoh}))
+            dispatch(updateContohSuccess(contoh))
+            console.log("berhasil")
+        }).catch(err => {
+            console.log("error: ",err)
+        })
+    }
+}
+export function deleteSoal(colId, docId, index) {
+    return async dispatch => {
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        const soal = (await dbRef.doc(docId).get()).data().soal
+        soal.splice(index,1)
+        dbRef.doc(docId).update({soal}).then(() => {
+            dispatch(updateSoalSuccess(soal))
             console.log("berhasil")
         }).catch(err => {
             console.log("error: ",err)
@@ -104,7 +110,18 @@ export function createContoh({data, colId, docId}) {
         const contoh = (await dbRef.doc(docId).get()).data().contoh || []
         contoh.push(data)
         dbRef.doc(docId).update({contoh}).then(() => {
-            dispatch(updateContohSuccess({contoh}))
+            dispatch(updateContohSuccess(contoh))
+            console.log("berhasil")
+        })
+    }
+}
+export function createSoal({data, colId, docId}) {
+    return async dispatch => {
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        const soal = (await dbRef.doc(docId).get()).data().soal || []
+        soal.push(data)
+        dbRef.doc(docId).update({soal}).then(() => {
+            dispatch(updateSoalSuccess(soal))
             console.log("berhasil")
         })
     }
@@ -116,13 +133,31 @@ export function getContohByIndex(colId, docId, index) {
         return contoh
     }
 }
+export function getSoalByIndex(colId, docId, index) {
+    return async () => {
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        const soal = (await dbRef.doc(docId).get()).data().soal[index]
+        return soal
+    }
+}
 export function updateContoh({data, colId, docId, index}) {
     return async dispatch => {
         const dbRef = collectionRef.doc(colId).collection(subCollectionName)
         let contoh = (await dbRef.doc(docId).get()).data().contoh
         contoh[index] = data
         dbRef.doc(docId).update({contoh}).then(() => {
-            dispatch(updateContohSuccess({contoh}))
+            dispatch(updateContohSuccess(contoh))
+            console.log("berhasil")
+        })
+    }
+}
+export function updateSoal({data, colId, docId, index}) {
+    return async dispatch => {
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        let soal = (await dbRef.doc(docId).get()).data().soal
+        soal[index] = data
+        dbRef.doc(docId).update({soal}).then(() => {
+            dispatch(updateSoalSuccess(soal))
             console.log("berhasil")
         })
     }
