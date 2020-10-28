@@ -10,7 +10,10 @@ export default function Document() {
     return (
         <Template
             active_link={2}
-            title={"Soal Psikotes"}
+            title={"Section Soal"}
+            history={[{
+                label: "Psikotes", path: "/psikotes"
+            }]}
             content= {  
                 <Switch>
                     <Route path={`${root_path}/update/:docId`}  component={UpdateForm}/>

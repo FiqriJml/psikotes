@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { updateData, getDatabyId } from "./sectionSlice";
+import { updateData, getDatabyId } from "./soalSlice";
 
 export default function UpdateForm({match}) {
   const {colId, docId} = match.params
   const root_path = `/section/${colId}`
-  const [no_sesi, setno_sesi] = useState("");
   const [batas_waktu, setbatas_waktu] = useState("");
   const [jenis, setjenis] = useState("");
   const [bentuk, setbentuk] = useState("");
@@ -17,8 +16,7 @@ export default function UpdateForm({match}) {
     
     useEffect(() => {
         dispatch(getDatabyId(colId, docId)).then((data) => {
-            const {no_sesi, batas_waktu, bentuk, jenis} = data
-            setno_sesi(no_sesi)
+            const {batas_waktu, bentuk, jenis} = data
             setbatas_waktu(batas_waktu)
             setbentuk(bentuk)
             setjenis(jenis)
@@ -28,7 +26,7 @@ export default function UpdateForm({match}) {
     const onSubmit = (e) => {
         e.preventDefault()
         setsaving(true)
-        const data = { no_sesi, batas_waktu, bentuk, jenis }
+        const data = { batas_waktu, bentuk, jenis }
         dispatch(updateData({data, docId, colId})).then(()=> {
           setsaving(false)
           history.push(root_path)
@@ -43,23 +41,6 @@ export default function UpdateForm({match}) {
         {/* form start */}
         <form className="form-horizontal" onSubmit={onSubmit}>
           <div className="card-body">
-            
-        <div className="form-group row">
-            <label htmlFor="no_sesi" className="col-sm-2 col-form-label">
-              No Sesi
-            </label>
-            <div className="col-sm-10">
-              <input
-                required
-                value={no_sesi}
-                onChange={(e) => setno_sesi(e.target.value)}
-                type="number"
-                className="form-control"
-                id="no_sesi"
-                placeholder="No Sesi"
-              />
-            </div>
-          </div>
           <div className="form-group row">
               <label htmlFor="batas_waktu" className="col-sm-2 col-form-label">
                 Batas Waktu Pengerjaan

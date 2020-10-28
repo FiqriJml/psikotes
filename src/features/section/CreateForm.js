@@ -6,6 +6,7 @@ import { createData } from "./sectionSlice";
 export default function CreateForm({match}) {
   const {colId} = match.params
   const root_path = `/section/${colId}`
+  const [no_sesi, setno_sesi] = useState("");
   const [batas_waktu, setbatas_waktu] = useState("");
   const [jenis, setjenis] = useState("");
   const [bentuk, setbentuk] = useState("");
@@ -19,7 +20,7 @@ export default function CreateForm({match}) {
     e.preventDefault();
     setsaving(true)
     const data = {
-      batas_waktu, jenis, bentuk
+      no_sesi, batas_waktu, jenis, bentuk, contoh: [], soal: []
     }
     dispatch(createData({ data, colId })).then(()=> {
       setsaving(false)
@@ -35,6 +36,22 @@ export default function CreateForm({match}) {
       {/* form start */}
       <form className="form-horizontal" onSubmit={onSubmit}>
         <div className="card-body">
+        <div className="form-group row">
+            <label htmlFor="no_sesi" className="col-sm-2 col-form-label">
+              No Sesi
+            </label>
+            <div className="col-sm-10">
+              <input
+                required
+                value={no_sesi}
+                onChange={(e) => setno_sesi(e.target.value)}
+                type="number"
+                className="form-control"
+                id="no_sesi"
+                placeholder="No Sesi"
+              />
+            </div>
+          </div>
         <div className="form-group row">
             <label htmlFor="batas_waktu" className="col-sm-2 col-form-label">
               Batas Waktu Pengerjaan

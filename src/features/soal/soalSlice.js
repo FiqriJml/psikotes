@@ -6,16 +6,17 @@ const collectionName = 'psikotes'
 const collectionRef = db.collection(collectionName)
 
 const subCollectionName = 'section'
-const dataName = subCollectionName
+const dataName = 'soal'
 
 export const initialState = {
     hasFetch: false,
     status: 'idle',
     data: [],
+    [subCollectionName]: [],
     [collectionName]: [],
 }
 
-export const sectionSlice = createSlice({
+export const soalSlice = createSlice({
   name: dataName,
   initialState,
   reducers: {
@@ -23,12 +24,11 @@ export const sectionSlice = createSlice({
         state.status = "loading"
     },
     getSuccess: (state, { payload }) => {
+        const {data, psikotes} = payload
+        state.data = data
+        state[collectionName] = psikotes
         state.hasFetch = true
-        state.data = payload
         state.status = "success"
-    },
-    getColSuccess: (state, { payload }) => {
-        state[collectionName] = payload
     },
     getFailure: (state, action) => {
         state.status = "failure"
@@ -54,31 +54,26 @@ export const sectionSlice = createSlice({
   },
 });
 
-export const { get, getSuccess, getFailure, deleteSuccess, updateSuccess, createSuccess, getColSuccess } = sectionSlice.actions
+export const { get, getSuccess, getFailure, deleteSuccess, updateSuccess, createSuccess, getColSuccess } = soalSlice.actions
 
 export const getData = state => state[dataName].data
 export const getColData = state => state[dataName][collectionName]
 export const hasFetch = state => state[dataName].hasFetch
 
-export default sectionSlice.reducer;
+export default soalSlice.reducer;
 
 // Asynchronous thunk action
-export function fetchData(colId) {
+export function fetchData(colId, docId) {
     return async dispatch => {
         dispatch(get())
         const dbRef = collectionRef.doc(colId).collection(subCollectionName)
         collectionRef.doc(colId).get().then( (colDoc) => {
-            const colData = colDoc.data()
-            dispatch(getColSuccess(colData))
-            dbRef.get().then( querySnapshot => {
-                const data = []
-                querySnapshot.forEach(function(doc) {
-                    const tmp = {
-                        id: doc.id, ...doc.data()
-                    }
-                    data.push(tmp)
-                })
-                dispatch(getSuccess(data))
+            const psikotes = colDoc.data()
+            dbRef.doc(docId).get().then( doc => {
+                const data = {
+                    id: doc.id, ...doc.data()
+                }
+                dispatch(getSuccess({data, psikotes}))
             }).catch( error => {    
                 dispatch(getFailure(error))
                 console.log("Error getting cached document:", error);
@@ -98,17 +93,14 @@ export function deleteData(colId, docId) {
         })
     }
 }
-export function createData({data, colId}) {
+export function createContoh({data, colId, docId}) {
     return async dispatch => {
         const dbRef = collectionRef.doc(colId).collection(subCollectionName)
-        dbRef.add(data).then((doc) => {
-            const newData = {
-                id: doc.id, ...data
-            }
-            dispatch(createSuccess(newData))
-            console.log("success")
-        }).catch(err => {
-            console.log("error: ",err)
+        const contoh = (await dbRef.doc(docId).get()).data().contoh || []
+        contoh.push(data)
+        console.log(contoh) 
+        dbRef.doc(docId).update({contoh}).then(() => {
+            console.log("berhasil")
         })
     }
 }

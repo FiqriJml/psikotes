@@ -48,7 +48,7 @@ export default function SectionList({match}) {
                 <td>{item.jenis}</td>
                 <td>{item.bentuk}</td>
                 <td className="text-right py-0 align-middle" width="130">
-                    <Link to={`/soal/${item.id}`} className="btn btn-info">Kelola Soal</Link></td>
+                    <Link to={`${path}/soal/${item.id}`} className="btn btn-info">Kelola Soal</Link></td>
                 <td className="text-right py-0 align-middle" width="100">
                     <div className="btn-group btn-group-sm">
                         <Link to={`${path}/update/${item.id}`} className="btn btn-success"><i className="fa fa-pencil-alt" /></Link>
@@ -66,11 +66,11 @@ export default function SectionList({match}) {
             </h5>
             </div>
             <div className="card-body">
-                <Link to={`${path}/create`} className="btn btn-success">Create new Data</Link>
+                <Link to={`${path}/create`} className="btn btn-success">Create new Section</Link>
                 <table className="table table-bordered mt-1">
                     <thead>
                         <tr>
-                            <th>No</th>
+                            <th>Sesi</th>
                             <th>Batas Waktu</th>
                             <th>Jenis</th>
                             <th>Bentuk</th>
