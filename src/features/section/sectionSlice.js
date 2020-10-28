@@ -70,7 +70,7 @@ export function fetchData(colId) {
         collectionRef.doc(colId).get().then( (colDoc) => {
             const colData = colDoc.data()
             dispatch(getColSuccess(colData))
-            dbRef.get().then( querySnapshot => {
+            dbRef.orderBy("no_sesi").get().then( querySnapshot => {
                 const data = []
                 querySnapshot.forEach(function(doc) {
                     const tmp = {
