@@ -43,8 +43,9 @@ export default function SectionList({match}) {
     if(dataDocument.length > 0 ){
         content = dataDocument.map((item, key) => (
             <tr key={key}>
-                <td>{key+1}</td>
+                <td>{item.no_sesi}</td>
                 <td>{item.batas_waktu}</td>
+                <td>Tipe-{item.tipe}</td>
                 <td>{item.jenis}</td>
                 <td>{item.bentuk}</td>
                 <td className="text-right py-0 align-middle" width="130">
@@ -72,6 +73,7 @@ export default function SectionList({match}) {
                         <tr>
                             <th>Sesi</th>
                             <th>Batas Waktu</th>
+                            <th>Tipe Soal</th>
                             <th>Jenis</th>
                             <th>Bentuk</th>
                             <th>Soal</th>
