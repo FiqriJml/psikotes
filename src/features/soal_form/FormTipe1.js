@@ -1,16 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { createSoal } from "./soalSlice";
 
-export default function CreateSoalForm({match}) {
-  const {colId, docId} = match.params
-  const root_path = `/section/${colId}/soal/${docId}`
-  const [pertanyaan, setpertanyaan] = useState("");
-  const [opsi, setopsi] = useState(["","","","",""]);
-  const [kunci, setkunci] = useState("");
-
-  const [saving, setsaving] = useState(false);
+export default function FormTipe1({match, props, useKunci, createSoal, state}) {
+  const {colId, docId, index} = match.params
+  const {onEnter, root_path} = props
+  const {pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving} = state
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -21,26 +16,11 @@ export default function CreateSoalForm({match}) {
     const data = {
       pertanyaan, opsi, kunci
     }
-    console.log(data)
-    // save soal
-
-    dispatch(createSoal({ data, colId, docId })).then(()=> {
+    dispatch(createSoal({ data, colId, docId, index })).then(()=> {
       setsaving(false)
       history.push(root_path);
     });
   };
-  const onEnter = (e) => {
-      // enter textarea auto resize
-      e.target.style.height = "auto"
-      const height = e.target.scrollHeight + 2
-      e.target.style.height = height + 'px'
-  }
-  const setAllOpsi = (e, index) => {
-    onEnter(e)
-    let newOpsi = [].concat(opsi)
-    newOpsi[index] = e.target.value
-    setopsi(newOpsi)
-  }
   return (
     <div className="card card-info">
       <div className="card-header">
@@ -83,7 +63,9 @@ export default function CreateSoalForm({match}) {
               </div>
             ))
         }
-          <div className="form-group row">
+        {
+            useKunci ? 
+            <div className="form-group row">
             <label htmlFor="kunci" className="col-sm-2 col-form-label">
               Kunci Jawaban 
             </label>
@@ -102,7 +84,8 @@ export default function CreateSoalForm({match}) {
                 <option value="e">e</option>
               </select>
             </div>
-          </div>
+          </div>: null
+        }
         </div>
         {/* /.card-body */}
         <div className="card-footer">

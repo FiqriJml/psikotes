@@ -36,13 +36,13 @@ export const soalSlice = createSlice({
     },
     updateContohSuccess: (state, {payload}) => {
         state.status = "success"
-        if(hasFetch){ 
+        if(state.hasFetch){ 
             state.data.contoh = payload
         }
     },
     updateSoalSuccess: (state, {payload}) => {
         state.status = "success"
-        if(hasFetch){ 
+        if(state.hasFetch){ 
             state.data.soal = payload
         }
     },
@@ -85,7 +85,7 @@ export function deleteContoh(colId, docId, index) {
         contoh.splice(index,1)
         dbRef.doc(docId).update({contoh}).then(() => {
             dispatch(updateContohSuccess(contoh))
-            console.log("berhasil")
+            console.log("success")
         }).catch(err => {
             console.log("error: ",err)
         })
@@ -111,7 +111,7 @@ export function createContoh({data, colId, docId}) {
         contoh.push(data)
         dbRef.doc(docId).update({contoh}).then(() => {
             dispatch(updateContohSuccess(contoh))
-            console.log("berhasil")
+            console.log("success")
         })
     }
 }

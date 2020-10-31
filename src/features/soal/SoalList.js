@@ -66,13 +66,14 @@ export default function SoalList({match}) {
 
     let contoh_content, soal_content
     contoh_content = soal_content = loading_data
-    if(dataContoh && dataContoh.length > 0){
-        contoh_content = dataContoh.map((item, i) => (
+    if(dataContoh){
+        if(dataContoh.length > 0){
+            contoh_content = dataContoh.map((item, i) => (
             <div key={i} className="border-top pt-1 px-2 pb-4"> 
                 <div className="row">
                     <div className="mr-auto"></div>
                     <div className="btn-group btn-group-sm pb-2">
-                        <Link to={`${path}/update-contoh/${i}`} className="btn btn-sm btn-info"><i className="fa fa-pencil-alt" /></Link>
+                        <Link to={`${path}/update-contoh/${i}/${dataSection.tipe}`} className="btn btn-sm btn-info"><i className="fa fa-pencil-alt" /></Link>
                         <button onClick={() => onDeleteContoh(i)} className="btn btn-sm btn-info"><i className="fas fa-trash" /></button>
                     </div>
                 </div>
@@ -95,40 +96,43 @@ export default function SoalList({match}) {
                 </table>
             </div>
         ))
-    }else if(dataContoh && dataContoh.length === 0){
-        contoh_content = no_data
+        }else if(dataContoh.length === 0){
+            contoh_content = no_data
+        }
     }
-    if(dataSoal && dataSoal.length > 0){
-        soal_content = dataSoal.map((item, i) => (
-            <div key={i} className="border-top pt-1 px-2 pb-4"> 
-                <div className="row">
-                    <div className="mr-auto"></div>
-                    <div className="btn-group btn-group-sm pb-2">
-                        <Link to={`${path}/update-soal/${i}`} className="btn btn-sm btn-info"><i className="fa fa-pencil-alt" /></Link>
-                        <button onClick={() => onDeleteSoal(i)} className="btn btn-sm btn-info"><i className="fas fa-trash" /></button>
+    if(dataSoal){
+        if(dataSoal.length > 0){
+            soal_content = dataSoal.map((item, i) => (
+                <div key={i} className="border-top pt-1 px-2 pb-4"> 
+                    <div className="row">
+                        <div className="mr-auto"></div>
+                        <div className="btn-group btn-group-sm pb-2">
+                            <Link to={`${path}/update-soal/${i}/${dataSection.tipe}`} className="btn btn-sm btn-info"><i className="fa fa-pencil-alt" /></Link>
+                            <button onClick={() => onDeleteSoal(i)} className="btn btn-sm btn-info"><i className="fas fa-trash" /></button>
+                        </div>
                     </div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td width="30" rowSpan="2" valign="top">{i+1}.</td>
+                                <td>{item.pertanyaan}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>a. {item.opsi[0]}</div>
+                                    <div>b. {item.opsi[1]}</div>
+                                    <div>c. {item.opsi[2]}</div>
+                                    <div>d. {item.opsi[3]}</div>
+                                    <div>e. {item.opsi[4]}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td width="30" rowSpan="2" valign="top">{i+1}.</td>
-                            <td>{item.pertanyaan}</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>a. {item.opsi[0]}</div>
-                                <div>b. {item.opsi[1]}</div>
-                                <div>c. {item.opsi[2]}</div>
-                                <div>d. {item.opsi[3]}</div>
-                                <div>e. {item.opsi[4]}</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        ))
-    }else if(dataSoal && dataSoal.length === 0){
-        soal_content = no_data
+            ))
+        }else if(dataSoal.length === 0){
+            soal_content = no_data
+        }
     }
     return (
         <div className="card">
@@ -144,7 +148,7 @@ export default function SoalList({match}) {
                         <h5>SESI {dataSection.no_sesi}</h5>
                         <div className="border border-secondary p-3 mb-4">
                             <h5>Contoh</h5>
-                            <Link to={`${path}/create-contoh`} className="btn btn-sm btn-info mb-3">Buat Contoh</Link>
+                            <Link to={`${path}/create-contoh/${dataSection.tipe}`} className="btn btn-sm btn-info mb-3">Buat Contoh</Link>
                             {contoh_content}
                             {/* <div className="border-top p-1 mb-2">
                             </div> */}
@@ -152,7 +156,7 @@ export default function SoalList({match}) {
                         </div>
                         <div className="border border-primary p-3 mb-4">
                             <h5>Soal</h5>
-                            <Link to={`${path}/create-soal`} className="btn btn-sm btn-info mb-3">Buat Soal</Link>                 
+                            <Link to={`${path}/create-soal/${dataSection.tipe}`} className="btn btn-sm btn-info mb-3">Buat Soal</Link>                 
                             {soal_content}
                             {/* <div className="border-top p-1 mb-2">
                             </div> */}
