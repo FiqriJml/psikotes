@@ -40,6 +40,9 @@ export default function CreateForm({match}) {
     }else if(tipeSoal === 2){
       setjenis(selectJenis[1])
       setbentuk(selectBentuk[0])
+    }else if(tipeSoal === 3){
+      setjenis(selectJenis[2])
+      setbentuk(selectBentuk[0])
     }
   }
   return (
@@ -95,6 +98,7 @@ export default function CreateForm({match}) {
                   <option value="" disabled>--pilih--</option>
                   <option value="1">Tipe 1</option>
                   <option value="2">Tipe 2</option>
+                  <option value="3">Tipe 3</option>
                 </select>
               </div>
           </div>
@@ -110,6 +114,7 @@ export default function CreateForm({match}) {
                   <option value="" disabled>--pilih--</option>
                   <option value={selectJenis[0]}>{selectJenis[0]}</option>
                   <option value={selectJenis[1]}>{selectJenis[1]}</option>
+                  <option value={selectJenis[2]}>{selectJenis[2]}</option>
                 </select>
               </div>
           </div>

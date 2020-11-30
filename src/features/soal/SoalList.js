@@ -5,6 +5,7 @@ import {deleteContoh, deleteSoal, fetchData, getColData, getData, hasFetch} from
 
 import {confirmAlert} from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
+import { SoalView1, SoalView2 } from './soalView';
 
 export default function SoalList({match}) {
     const {colId, docId} = match.params
@@ -64,74 +65,30 @@ export default function SoalList({match}) {
     const loading_data = <div className="border-top border-bottom p-1 mb-2"> Loading...</div>
 
 
-    let contoh_content, soal_content
-    contoh_content = soal_content = loading_data
+    let ContohContent, SoalContent
+    ContohContent = SoalContent = loading_data
     if(dataContoh){
         if(dataContoh.length > 0){
-            contoh_content = dataContoh.map((item, i) => (
-            <div key={i} className="border-top pt-1 px-2 pb-4"> 
-                <div className="row">
-                    <div className="mr-auto"></div>
-                    <div className="btn-group btn-group-sm pb-2">
-                        <Link to={`${path}/update-contoh/${i}/${dataSection.tipe}`} className="btn btn-sm btn-info"><i className="fa fa-pencil-alt" /></Link>
-                        <button onClick={() => onDeleteContoh(i)} className="btn btn-sm btn-info"><i className="fas fa-trash" /></button>
-                    </div>
-                </div>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td width="30" rowSpan="2" valign="top">{i+1}.</td>
-                            <td>{item.pertanyaan}</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>a. {item.opsi[0]}</div>
-                                <div>b. {item.opsi[1]}</div>
-                                <div>c. {item.opsi[2]}</div>
-                                <div>d. {item.opsi[3]}</div>
-                                <div>e. {item.opsi[4]}</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        ))
+            const updatePath = `${path}/update-contoh`
+            if(parseInt(dataSection.tipe) === 1){
+                ContohContent = SoalView1(dataContoh, dataSection, updatePath, {onDeleteContoh})
+            }else if(parseInt(dataSection.tipe) === 2){
+                ContohContent = SoalView2(dataContoh, dataSection, updatePath, {onDeleteContoh})
+            }
         }else if(dataContoh.length === 0){
-            contoh_content = no_data
+            ContohContent = no_data
         }
     }
     if(dataSoal){
         if(dataSoal.length > 0){
-            soal_content = dataSoal.map((item, i) => (
-                <div key={i} className="border-top pt-1 px-2 pb-4"> 
-                    <div className="row">
-                        <div className="mr-auto"></div>
-                        <div className="btn-group btn-group-sm pb-2">
-                            <Link to={`${path}/update-soal/${i}/${dataSection.tipe}`} className="btn btn-sm btn-info"><i className="fa fa-pencil-alt" /></Link>
-                            <button onClick={() => onDeleteSoal(i)} className="btn btn-sm btn-info"><i className="fas fa-trash" /></button>
-                        </div>
-                    </div>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td width="30" rowSpan="2" valign="top">{i+1}.</td>
-                                <td>{item.pertanyaan}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div>a. {item.opsi[0]}</div>
-                                    <div>b. {item.opsi[1]}</div>
-                                    <div>c. {item.opsi[2]}</div>
-                                    <div>d. {item.opsi[3]}</div>
-                                    <div>e. {item.opsi[4]}</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            ))
+            const updatePath = `${path}/update-soal`
+            if(parseInt(dataSection.tipe) === 1){
+                SoalContent = SoalView1(dataSoal, dataSection, updatePath, {onDeleteSoal})
+            }else if(parseInt(dataSection.tipe) === 2){
+                SoalContent = SoalView2(dataSoal, dataSection, updatePath, {onDeleteSoal})
+            }
         }else if(dataSoal.length === 0){
-            soal_content = no_data
+            SoalContent = no_data
         }
     }
     return (
@@ -149,7 +106,7 @@ export default function SoalList({match}) {
                         <div className="border border-secondary p-3 mb-4">
                             <h5>Contoh</h5>
                             <Link to={`${path}/create-contoh/${dataSection.tipe}`} className="btn btn-sm btn-info mb-3">Buat Contoh</Link>
-                            {contoh_content}
+                            {ContohContent}
                             {/* <div className="border-top p-1 mb-2">
                             </div> */}
                             <br/>
@@ -157,7 +114,7 @@ export default function SoalList({match}) {
                         <div className="border border-primary p-3 mb-4">
                             <h5>Soal</h5>
                             <Link to={`${path}/create-soal/${dataSection.tipe}`} className="btn btn-sm btn-info mb-3">Buat Soal</Link>                 
-                            {soal_content}
+                            {SoalContent}
                             {/* <div className="border-top p-1 mb-2">
                             </div> */}
                             <br/>

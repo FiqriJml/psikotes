@@ -1,6 +1,7 @@
 export const selectJenis = [
     "Pilihan Ganda", 
-    "Isian"
+    "Isian",
+    "Isian 2",
   ]
 
 export const selectBentuk = [
