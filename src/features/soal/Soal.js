@@ -6,6 +6,7 @@ import UpdateContoh from './UpdateContoh'
 import UpdateSoal from './UpdateSoal'
 import CreateContoh from './CreateContoh'
 import CreateSoal from './CreateSoal'
+import CreateOpsi from './CreateOpsi';
 
 export default function Soal({match}) {
     const {colId} = match.params
@@ -24,6 +25,7 @@ export default function Soal({match}) {
                     <Route path={`${root_path}/update-soal/:index/:tipe_soal`}  component={UpdateSoal}/>
                     <Route path={`${root_path}/create-contoh/:tipe_soal`} component={CreateContoh}/>
                     <Route path={`${root_path}/create-soal/:tipe_soal`} component={CreateSoal}/>
+                    <Route path={`${root_path}/create-opsi/:tipe_soal`} component={CreateOpsi}/>
                     <Route path={`${root_path}`} component={SoalList}/>
                 </Switch>
             }

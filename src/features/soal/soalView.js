@@ -58,14 +58,68 @@ export function SoalView2(dataSoal, dataSection, updatePath, {onDeleteSoal, onDe
                             <td width="30" rowSpan="2" valign="top">{i+1}.</td>
                             <td>{item.pertanyaan}</td>
                         </tr>
-                        <tr>
-                            <td>
-                                <div>{i+1}.&nbsp;&nbsp;&nbsp; .............</div>
-                            </td>
-                        </tr>
+                        { onDeleteSoal ? null : 
+                            <tr>
+                                <td>
+                                    <div>{i+1}.&nbsp;&nbsp;&nbsp; .............</div>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
         ))
     )
+}
+
+
+export function SoalView3(dataSoal, dataSection, updatePath, {onDeleteSoal, onDeleteContoh}){
+    return (
+        dataSoal.map((item, i) => (
+            <div key={i} className="border-top pt-1 px-2 pb-4"> 
+                <div className="row">
+                    <div className="mr-auto"></div>
+                    <div className="btn-group btn-group-sm pb-2">
+                        <Link to={`${updatePath}/${i}/${dataSection.tipe}`} className="btn btn-sm btn-info"><i className="fa fa-pencil-alt" /></Link>
+                        <button onClick={() => {
+                            if(onDeleteSoal){onDeleteSoal(i)}
+                            else if (onDeleteContoh) {onDeleteContoh(i)}
+                        }} className="btn btn-sm btn-info"><i className="fas fa-trash" /></button>
+                    </div>
+                </div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td width="30" rowSpan="2" valign="top">{i+1}.</td>
+                            <td>{item.pertanyaan}</td>
+                        </tr>
+                        { onDeleteSoal ? null :
+                            <tr>
+                                <td>
+                                    <div>{i+1}.&nbsp;&nbsp;&nbsp; 
+                                        1 &nbsp;&nbsp;
+                                        2 &nbsp;&nbsp;
+                                        3 &nbsp;&nbsp;
+                                        4 &nbsp;&nbsp;
+                                        5 &nbsp;&nbsp;
+                                        6 &nbsp;&nbsp;
+                                        7 &nbsp;&nbsp;
+                                        8 &nbsp;&nbsp;
+                                        9 &nbsp;&nbsp;
+                                        0 &nbsp;&nbsp;
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        ))
+    )
+}
+
+// CONTOH VIEW
+
+export function ContohView4() {
+    
 }

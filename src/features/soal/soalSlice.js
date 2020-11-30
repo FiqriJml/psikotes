@@ -40,6 +40,12 @@ export const soalSlice = createSlice({
             state.data.contoh = payload
         }
     },
+    updateOpsiSuccess: (state, {payload}) => {
+        state.status = "success"
+        if(state.hasFetch){ 
+            state.data.opsi = payload
+        }
+    },
     updateSoalSuccess: (state, {payload}) => {
         state.status = "success"
         if(state.hasFetch){ 
@@ -50,7 +56,7 @@ export const soalSlice = createSlice({
 });
 
 export const { get, getSuccess, getFailure, getColSuccess, 
-    updateContohSuccess, updateSoalSuccess } = soalSlice.actions
+    updateContohSuccess, updateOpsiSuccess, updateSoalSuccess } = soalSlice.actions
 
 export const getData = state => state[dataName].data
 export const getColData = state => state[dataName][collectionName]
@@ -164,12 +170,21 @@ export function updateSoal({data, colId, docId, index}) {
 }
 
 
-
-
+export function createOpsi({data, colId, docId}) {
+    return async dispatch => {
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        const opsi = (await dbRef.doc(docId).get()).data().opsi || []
+        opsi.push(data)
+        dbRef.doc(docId).update({opsi}).then(() => {
+            dispatch(updateOpsiSuccess(opsi))
+            console.log("success")
+        })
+    }
+}
 
 export const uploadFile = (props) => {
     const {fileDocument, fileName} = props
-    const path = `materi/${fileName}`
+    const path = `gambar/${fileName}`
     const uploadTask = storage.ref(path).put(fileDocument)
     return uploadTask
 }

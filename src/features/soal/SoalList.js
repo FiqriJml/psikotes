@@ -5,7 +5,7 @@ import {deleteContoh, deleteSoal, fetchData, getColData, getData, hasFetch} from
 
 import {confirmAlert} from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
-import { SoalView1, SoalView2 } from './soalView';
+import { SoalView1, SoalView2, SoalView3 } from './soalView';
 
 export default function SoalList({match}) {
     const {colId, docId} = match.params
@@ -27,6 +27,10 @@ export default function SoalList({match}) {
     const dataSoal = dataSection.soal
     const dataContoh = dataSection.contoh
     const dataCol = useSelector(getColData)
+
+    // husus tipesoal 4
+    const dataOpsi = dataSection.opsi
+    console.log(dataOpsi)
 
     const onDeleteContoh = (index) => {
         console.log(index)
@@ -65,8 +69,21 @@ export default function SoalList({match}) {
     const loading_data = <div className="border-top border-bottom p-1 mb-2"> Loading...</div>
 
 
-    let ContohContent, SoalContent
-    ContohContent = SoalContent = loading_data
+    let ContohContent, SoalContent, OpsiContent
+    ContohContent = SoalContent = OpsiContent = loading_data
+    if(hasFetched){
+        if(!dataOpsi){
+            OpsiContent = no_data
+        }
+    }
+    if(dataOpsi){
+        if(dataOpsi.length > 0){
+            OpsiContent = <div>
+                <span>01. </span><img alt="opsi soal" src={dataOpsi[0]} height="100"/>
+            </div>
+        }
+    }
+
     if(dataContoh){
         if(dataContoh.length > 0){
             const updatePath = `${path}/update-contoh`
@@ -74,6 +91,10 @@ export default function SoalList({match}) {
                 ContohContent = SoalView1(dataContoh, dataSection, updatePath, {onDeleteContoh})
             }else if(parseInt(dataSection.tipe) === 2){
                 ContohContent = SoalView2(dataContoh, dataSection, updatePath, {onDeleteContoh})
+            }else if(parseInt(dataSection.tipe) === 3){
+                ContohContent = SoalView3(dataContoh, dataSection, updatePath, {onDeleteContoh})
+            }else if(parseInt(dataSection.tipe) === 4){
+                ContohContent = SoalView3(dataContoh, dataSection, updatePath, {onDeleteContoh})
             }
         }else if(dataContoh.length === 0){
             ContohContent = no_data
@@ -85,6 +106,8 @@ export default function SoalList({match}) {
             if(parseInt(dataSection.tipe) === 1){
                 SoalContent = SoalView1(dataSoal, dataSection, updatePath, {onDeleteSoal})
             }else if(parseInt(dataSection.tipe) === 2){
+                SoalContent = SoalView2(dataSoal, dataSection, updatePath, {onDeleteSoal})
+            }else if(parseInt(dataSection.tipe) === 3){
                 SoalContent = SoalView2(dataSoal, dataSection, updatePath, {onDeleteSoal})
             }
         }else if(dataSoal.length === 0){
@@ -103,12 +126,18 @@ export default function SoalList({match}) {
                 <div className="col-sm-12 col-md-8 ">
                     <div className="card-body">
                         <h5>SESI {dataSection.no_sesi}</h5>
+                        { dataSection.tipe !== 4 ? null :
+                            <div className="border border-secondary p-3 mb-4">
+                                <h5>Opsi Gambar</h5>
+                                <Link to={`${path}/create-opsi/${dataSection.tipe}`} className="btn btn-sm btn-primary mb-3">Upload</Link>
+                                {OpsiContent}
+                                <br/>
+                            </div>
+                        }
                         <div className="border border-secondary p-3 mb-4">
                             <h5>Contoh</h5>
                             <Link to={`${path}/create-contoh/${dataSection.tipe}`} className="btn btn-sm btn-info mb-3">Buat Contoh</Link>
                             {ContohContent}
-                            {/* <div className="border-top p-1 mb-2">
-                            </div> */}
                             <br/>
                         </div>
                         <div className="border border-primary p-3 mb-4">

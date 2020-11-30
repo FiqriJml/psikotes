@@ -29,7 +29,11 @@ export default function CreateSoal({match}) {
     SoalForm = <FormTipe1 createSoal={createSoal} useKunci={true} match={match} 
     props={{setAllOpsi, opsi, setopsi, onEnter, root_path, saving, setsaving}}
     state={{pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving}}/>
-  }if(parseInt(tipe_soal) === 2){
+  }else if(parseInt(tipe_soal) === 2){
+    SoalForm = <FormTipe2 createSoal={createSoal} useKunci={true} match={match} 
+    props={{setAllOpsi, opsi, setopsi, onEnter, root_path, saving, setsaving}}
+    state={{pertanyaan, setpertanyaan, kunci, setkunci, saving, setsaving}}/>
+  }else if(parseInt(tipe_soal) === 3){
     SoalForm = <FormTipe2 createSoal={createSoal} useKunci={true} match={match} 
     props={{setAllOpsi, opsi, setopsi, onEnter, root_path, saving, setsaving}}
     state={{pertanyaan, setpertanyaan, kunci, setkunci, saving, setsaving}}/>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ContohFormTipe4 from "../soal_form/ContohFormTipe4";
 import FormTipe1 from "../soal_form/FormTipe1";
 import FormTipe2 from "../soal_form/FormTipe2";
 import { createContoh } from "./soalSlice";
@@ -33,6 +34,14 @@ export default function CreateContoh({match}) {
     SoalForm = <FormTipe2 createSoal={createContoh} useKunci={false} match={match} 
     props={{onEnter, root_path}}
     state={{pertanyaan, setpertanyaan, kunci, setkunci, saving, setsaving}}/>
+  }else if(parseInt(tipe_soal) === 3){
+    SoalForm = <FormTipe2 createSoal={createContoh} useKunci={false} match={match} 
+    props={{onEnter, root_path}}
+    state={{pertanyaan, setpertanyaan, kunci, setkunci, saving, setsaving}}/>
+  }else if(parseInt(tipe_soal) === 4){
+    SoalForm = <ContohFormTipe4 createSoal={createContoh} useKunci={false} match={match} 
+    props={{onEnter, root_path}}
+    state={{pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving}}/>
   }else{
     SoalForm = <h4 className="alert alert-danger">Page Not Found</h4>
   }

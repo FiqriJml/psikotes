@@ -44,6 +44,10 @@ export default function UpdateContoh({match}) {
     SoalForm = <FormTipe2 createSoal={updateContoh} useKunci={false} match={match} 
     props={{onEnter, root_path}}
     state={{pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving}}/>
+  }else if(parseInt(tipe_soal) === 3){
+    SoalForm = <FormTipe2 createSoal={updateContoh} useKunci={false} match={match} 
+    props={{onEnter, root_path}}
+    state={{pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving}}/>
   }else{
     SoalForm = <h4 className="alert alert-danger">Page Not Found</h4>
   }
