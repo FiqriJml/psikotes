@@ -5,7 +5,7 @@ import PsikotesList from './PsikotesList'
 import UpdateForm from './UpdateForm'
 import CreateForm from './CreateForm'
 
-export default function Document() {
+export default function Psikotes() {
     const root_path = "/psikotes"
     return (
         <Template

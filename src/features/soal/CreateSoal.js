@@ -7,6 +7,8 @@ export default function CreateSoal({match}) {
   const root_path = `/section/${colId}/soal/${docId}`
   const [opsi, setopsi] = useState(["","","","",""]);
 
+  const [pertanyaan, setpertanyaan] = useState("");
+  const [kunci, setkunci] = useState("");
   const [saving, setsaving] = useState(false);
 
   const onEnter = (e) => {
@@ -24,7 +26,8 @@ export default function CreateSoal({match}) {
   let SoalForm = ''
   if(parseInt(tipe_soal) === 1){
     SoalForm = <FormTipe1 createSoal={createSoal} useKunci={true} match={match} 
-    props={{setAllOpsi, opsi, setopsi, onEnter, root_path, saving, setsaving}}/>
+    props={{setAllOpsi, opsi, setopsi, onEnter, root_path, saving, setsaving}}
+    state={{pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving}}/>
   }else{
     SoalForm = <h4 className="alert alert-danger">Page Not Found</h4>
   }
