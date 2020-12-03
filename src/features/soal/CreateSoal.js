@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import FormTipe1 from "../soal_form/FormTipe1";
 import FormTipe2 from "../soal_form/FormTipe2";
+import FormTipe4 from "../soal_form/FormTipe4";
 import { createSoal } from "./soalSlice";
 
 export default function CreateSoal({match}) {
@@ -37,6 +38,10 @@ export default function CreateSoal({match}) {
     SoalForm = <FormTipe2 createSoal={createSoal} useKunci={true} match={match} 
     props={{setAllOpsi, opsi, setopsi, onEnter, root_path, saving, setsaving}}
     state={{pertanyaan, setpertanyaan, kunci, setkunci, saving, setsaving}}/>
+  }else if(parseInt(tipe_soal) === 4){
+    SoalForm = <FormTipe4 createSoal={createSoal} useKunci={true} match={match} 
+    props={{onEnter, root_path}}
+    state={{pertanyaan, setpertanyaan, opsi, setopsi, kunci, setkunci,}}/>
   }else{
     SoalForm = <h4 className="alert alert-danger">Page Not Found</h4>
   }

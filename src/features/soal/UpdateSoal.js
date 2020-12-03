@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import FormTipe1 from "../soal_form/FormTipe1";
 import FormTipe2 from "../soal_form/FormTipe2";
+import FormTipe4 from "../soal_form/FormTipe4";
 import { getSoalByIndex, updateSoal } from "./soalSlice";
 
 export default function UpdateSoal({match}) {
@@ -50,6 +51,10 @@ export default function UpdateSoal({match}) {
     SoalForm = <FormTipe2 createSoal={updateSoal} useKunci={true} match={match} 
     props={{onEnter, root_path}}
     state={{pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving}}/>
+  }else if(parseInt(tipe_soal) === 4){
+    SoalForm = <FormTipe4 createSoal={updateSoal} useKunci={true} match={match} 
+    props={{onEnter, root_path}}
+    state={{pertanyaan, setpertanyaan, opsi, setopsi, kunci, setkunci,}}/>
   }else{
     SoalForm = <h4 className="alert alert-danger">Page Not Found</h4>
   }

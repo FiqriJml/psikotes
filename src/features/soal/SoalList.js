@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {deleteContoh, deleteSoal, fetchData, getColData, getData, hasFetch} from "./soalSlice"
+import {deleteContoh, deleteSoal, deleteOpsi, fetchData, getColData, getData, hasFetch} from "./soalSlice"
 
 import {confirmAlert} from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
-import { SoalView1, SoalView2, SoalView3 } from './soalView';
+import { ContohView4, SoalView1, SoalView2, SoalView3, OpsiView, SoalView4} from './soalView';
 
 export default function SoalList({match}) {
     const {colId, docId} = match.params
@@ -29,6 +29,7 @@ export default function SoalList({match}) {
     const dataCol = useSelector(getColData)
 
     // husus tipesoal 4
+    let no_opsi = 0
     const dataOpsi = dataSection.opsi
     console.log(dataOpsi)
 
@@ -41,6 +42,22 @@ export default function SoalList({match}) {
                 {
                   label: 'Yes',
                   onClick: () => dispatch(deleteContoh(colId, docId, index))
+                },
+                {
+                  label: 'No',
+                }
+              ]
+        })
+    }
+    const onDeleteOpsi = (index) => {
+        console.log(index)
+        confirmAlert({
+            title: "Are you sure?",
+            message: "You want to delete this file?",
+            buttons: [
+                {
+                  label: 'Yes',
+                  onClick: () => dispatch(deleteOpsi(colId, docId, index))
                 },
                 {
                   label: 'No',
@@ -78,14 +95,17 @@ export default function SoalList({match}) {
     }
     if(dataOpsi){
         if(dataOpsi.length > 0){
-            OpsiContent = <div>
-                <span>01. </span><img alt="opsi soal" src={dataOpsi[0]} height="100"/>
-            </div>
+            const updatePath = `${path}/update-opsi`
+            no_opsi = dataOpsi.length
+            OpsiContent = OpsiView(dataOpsi, dataSection, updatePath, {onDeleteOpsi})
+        }else{
+            OpsiContent = no_data
         }
     }
-
+    let no_contoh = 0
     if(dataContoh){
         if(dataContoh.length > 0){
+            no_contoh = dataContoh.length
             const updatePath = `${path}/update-contoh`
             if(parseInt(dataSection.tipe) === 1){
                 ContohContent = SoalView1(dataContoh, dataSection, updatePath, {onDeleteContoh})
@@ -94,14 +114,16 @@ export default function SoalList({match}) {
             }else if(parseInt(dataSection.tipe) === 3){
                 ContohContent = SoalView3(dataContoh, dataSection, updatePath, {onDeleteContoh})
             }else if(parseInt(dataSection.tipe) === 4){
-                ContohContent = SoalView3(dataContoh, dataSection, updatePath, {onDeleteContoh})
+                ContohContent = ContohView4(dataContoh, dataSection, updatePath, {onDeleteContoh})
             }
         }else if(dataContoh.length === 0){
             ContohContent = no_data
         }
     }
+    let no_soal = 0
     if(dataSoal){
         if(dataSoal.length > 0){
+            no_soal = dataSoal.length
             const updatePath = `${path}/update-soal`
             if(parseInt(dataSection.tipe) === 1){
                 SoalContent = SoalView1(dataSoal, dataSection, updatePath, {onDeleteSoal})
@@ -109,6 +131,8 @@ export default function SoalList({match}) {
                 SoalContent = SoalView2(dataSoal, dataSection, updatePath, {onDeleteSoal})
             }else if(parseInt(dataSection.tipe) === 3){
                 SoalContent = SoalView2(dataSoal, dataSection, updatePath, {onDeleteSoal})
+            }else if(parseInt(dataSection.tipe) === 4){
+                SoalContent = SoalView4(dataSoal, dataSection, updatePath, {onDeleteSoal})
             }
         }else if(dataSoal.length === 0){
             SoalContent = no_data
@@ -129,20 +153,20 @@ export default function SoalList({match}) {
                         { dataSection.tipe !== 4 ? null :
                             <div className="border border-secondary p-3 mb-4">
                                 <h5>Opsi Gambar</h5>
-                                <Link to={`${path}/create-opsi/${dataSection.tipe}`} className="btn btn-sm btn-primary mb-3">Upload</Link>
+                                <Link to={`${path}/create-opsi/${dataSection.tipe}/${no_opsi}`} className="btn btn-sm btn-primary mb-3">Upload</Link>
                                 {OpsiContent}
                                 <br/>
                             </div>
                         }
                         <div className="border border-secondary p-3 mb-4">
                             <h5>Contoh</h5>
-                            <Link to={`${path}/create-contoh/${dataSection.tipe}`} className="btn btn-sm btn-info mb-3">Buat Contoh</Link>
+                            <Link to={`${path}/create-contoh/${dataSection.tipe}/${no_contoh}`} className="btn btn-sm btn-info mb-3">Buat Contoh</Link>
                             {ContohContent}
                             <br/>
                         </div>
                         <div className="border border-primary p-3 mb-4">
                             <h5>Soal</h5>
-                            <Link to={`${path}/create-soal/${dataSection.tipe}`} className="btn btn-sm btn-info mb-3">Buat Soal</Link>                 
+                            <Link to={`${path}/create-soal/${dataSection.tipe}/${no_soal}`} className="btn btn-sm btn-info mb-3">Buat Soal</Link>                 
                             {SoalContent}
                             {/* <div className="border-top p-1 mb-2">
                             </div> */}

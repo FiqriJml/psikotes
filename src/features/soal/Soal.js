@@ -23,9 +23,11 @@ export default function Soal({match}) {
                 <Switch>
                     <Route path={`${root_path}/update-contoh/:index/:tipe_soal`}  component={UpdateContoh}/>
                     <Route path={`${root_path}/update-soal/:index/:tipe_soal`}  component={UpdateSoal}/>
+                    <Route path={`${root_path}/create-contoh/:tipe_soal/:index`} component={CreateContoh}/>
                     <Route path={`${root_path}/create-contoh/:tipe_soal`} component={CreateContoh}/>
+                    <Route path={`${root_path}/create-soal/:tipe_soal/:index`} component={CreateSoal}/>
                     <Route path={`${root_path}/create-soal/:tipe_soal`} component={CreateSoal}/>
-                    <Route path={`${root_path}/create-opsi/:tipe_soal`} component={CreateOpsi}/>
+                    <Route path={`${root_path}/create-opsi/:tipe_soal/:index`} component={CreateOpsi}/>
                     <Route path={`${root_path}`} component={SoalList}/>
                 </Switch>
             }

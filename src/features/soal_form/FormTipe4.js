@@ -1,30 +1,75 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import {uploadFile, getDownloadURL, hasFetch, fetchData, getData} from "../soal/soalSlice"
+import { useEffect } from "react";
+import { OpsiViewForm } from "../soal/soalView";
 
-export default function FormTipe4({match, props, useKunci, createSoal, state}) {
+export default function ContohFormTipe4({match, props, state, createSoal}) {
   const {colId, docId, index} = match.params
   const {onEnter, root_path} = props
-  const {pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving} = state
-
+  const {pertanyaan, setpertanyaan, opsi, setopsi, kunci, setkunci,} = state
+  
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const [fileDocument, setfileDocument] = useState("");
+  const [saving, setsaving] = useState(false);
+  const [progress, setprogress] = useState(0);
+
+
+  const hasFetched = useSelector(hasFetch)
+
+  useEffect(() => { 
+      if(!hasFetched){
+          dispatch(fetchData(colId, docId))
+      }
+  }, [dispatch, colId, docId, hasFetched])
+
+  const dataSection = useSelector(getData)
+  console.log(dataSection)
+  const dataOpsi = dataSection.opsi
+  let OpsiContent = <></>
+  if(hasFetched){
+      if(dataOpsi){
+          if(dataOpsi.length > 0){
+            OpsiContent = OpsiViewForm(dataOpsi, {opsi, setopsi})
+          }
+      }
+  }
+  console.log(dataOpsi)
   const onSubmit = (e) => {
     e.preventDefault();
+    const fileName = `${colId}/${docId}/soal_${index}`
+    const task = uploadFile({fileDocument, fileName})
     setsaving(true)
-    const data = {
-      pertanyaan, opsi, kunci
-    }
-    dispatch(createSoal({ data, colId, docId, index })).then(()=> {
-      setsaving(false)
-      history.push(root_path);
-    });
+    task.on('state_changed', (snapShot) => {
+      let persen = parseInt((snapShot.bytesTransferred / snapShot.totalBytes) * 100)
+      setprogress(persen)
+    } )
+    task.then( async (resp) => {
+        // selanjutnya simpan alamat image pada database
+        const path = await getDownloadURL(resp.ref.fullPath)
+        const data = {
+            pertanyaan, gambar: path, opsi, kunci
+        };
+        dispatch(createSoal({ data, colId, docId, index })).then(()=> {
+          setsaving(false)
+          history.push(root_path);
+        });
+    })
+  };
+  
+  const onFileChange = (e) => {
+    const file = e.target.files[0]
+    console.log(file);
+    setfileDocument(file)
   };
   return (
     <div className="card card-info">
       <div className="card-header">
-        <h3 className="card-title">Create new Soal</h3>
+        <h3 className="card-title">Create new Contoh Soal</h3>
       </div>
       {/* /.card-header */}
       {/* form start */}
@@ -46,26 +91,26 @@ export default function FormTipe4({match, props, useKunci, createSoal, state}) {
                 id="pertanyaan"/>
             </div>
           </div>
-          {
-            opsi && opsi.map((item, i) => (
-              <div className="form-group row" key={i}>
-                <label htmlFor={`opsi_${i+1}`} className="col-sm-2 col-form-label">
-                  Opsi {i+1}
-                </label>
-                <div className="col-sm-10">
-                  <textarea 
-                    className="form-control"
-                    placeholder={`Opsi ${i+1}`}
-                    value={item}
-                    onChange={(e) =>{ onEnter(e); setAllOpsi(e, i) }}
-                    id={`opsi_${i+1}`}/>
-                </div>
-              </div>
-            ))
-        }
-        {
-            useKunci ? 
-            <div className="form-group row">
+          <div className="form-group row">
+            <label htmlFor="pertanyaan_img" className="col-sm-2 col-form-label">
+              Gambar Soal
+            </label>
+            <div className="col-sm-10">
+              <input 
+                onChange={onFileChange}
+                type="file" 
+                className="form-control"
+                placeholder="Gamabar Soal"
+                id="pertanyaan_img"/>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label className="col-sm-2 col-form-label">
+              Opsi Gambar
+            </label>
+            {OpsiContent}
+          </div>
+          <div className="form-group row">
             <label htmlFor="kunci" className="col-sm-2 col-form-label">
               Kunci Jawaban 
             </label>
@@ -84,16 +129,19 @@ export default function FormTipe4({match, props, useKunci, createSoal, state}) {
                 <option value="e">e</option>
               </select>
             </div>
-          </div>: null
-        }
+          </div>
         </div>
         {/* /.card-body */}
         <div className="card-footer">
           {
             saving ? 
             <button className="btn btn-primary" type="button" disabled>
-              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" /> Saving...
-            </button> :
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" /> 
+              { progress === 100 ? <span>Saving.... </span> :
+                  <span>Uploading... {progress}%</span> 
+              }
+            </button>
+            :
             <button type="submit" className="btn btn-info">
               Submit
             </button> 

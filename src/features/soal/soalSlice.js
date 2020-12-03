@@ -182,6 +182,20 @@ export function createOpsi({data, colId, docId}) {
     }
 }
 
+export function deleteOpsi(colId, docId, index) {
+    return async dispatch => {
+        const dbRef = collectionRef.doc(colId).collection(subCollectionName)
+        const opsi = (await dbRef.doc(docId).get()).data().opsi
+        opsi.splice(index,1)
+        dbRef.doc(docId).update({opsi}).then(() => {
+            dispatch(updateOpsiSuccess(opsi))
+            console.log("success")
+        }).catch(err => {
+            console.log("error: ",err)
+        })
+    }
+}
+
 export const uploadFile = (props) => {
     const {fileDocument, fileName} = props
     const path = `gambar/${fileName}`

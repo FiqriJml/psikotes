@@ -4,12 +4,15 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {fetchData, getColData, getData, hasFetch} from "../section/sectionSlice"
+import {SoalView, ContohView} from './soal_view'
 
 function HalamanUji({match}) {
     const {colId, index} = match.params
     
 
     const [mulai, setmulai] = useState(false)
+    const [kunci, setkunci] = useState([])
+
     const dispatch = useDispatch();
     const history = useHistory()
     // dispatch our thunk when component first mounts
@@ -29,7 +32,7 @@ function HalamanUji({match}) {
     }
     const soal = dataSection[index].soal
     const contoh = dataSection[index].contoh
-    const huruf = ['a','b','c','d','e']
+    const tipe_soal = dataSection[index].tipe
     console.log(soal)
 
     const gotoNext = () => {
@@ -42,6 +45,18 @@ function HalamanUji({match}) {
             console.log("SOAL HABIS")
         }
     }
+    const gotoSoal = () => {
+        setmulai(true)
+        const array = new Array(soal.length).fill("");
+        setkunci(array)
+    }
+    
+    const onSetKunci = (e, i) => {
+        let newKunci = [...kunci]
+        console.log(i)
+        newKunci[i] = e.target.value
+        setkunci(newKunci)
+    }
     return (
         <div className="container">
             {/* HEADER */}
@@ -52,28 +67,11 @@ function HalamanUji({match}) {
             <div className="ujian border">
                 <h5>Contoh</h5>
                 <div className="ujian-body">
-                    {   
-                        contoh.map((item, index) => (
-                            <div className="ujian-item-soal" key={index}>
-                                <div>{index+1}.&nbsp;&nbsp;</div>
-                                <div>
-                                    {item.pertanyaan}
-                                    <div>
-                                        {item.opsi.map((item, index) => (
-                                            <div className="item-opsi" key={index}>
-                                                <div>{huruf[index]}.&nbsp;&nbsp;</div>
-                                                <div>{item}</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    }
+                    <ContohView soal={contoh} tipe={tipe_soal} state={{kunci, onSetKunci}} />
                 </div>
                 { mulai ? null:
                     <div className="text-center">
-                        <button className="btn btn-secondary" onClick={() => setmulai(true)}>Mulai</button>
+                        <button className="btn btn-secondary" onClick={gotoSoal}>Mulai</button>
                     </div>
                 }
             </div>
@@ -83,25 +81,7 @@ function HalamanUji({match}) {
                 <div className="ujian border">
                     <h5>Soal</h5>
                     <div className="ujian-body">
-                        {   
-                            soal.map((item, index) => (
-                                <div className="ujian-item-soal" key={index}>
-                                    <div>{index+1}.&nbsp;&nbsp;</div>
-                                    <div>
-                                        {item.pertanyaan}
-                                        <div>
-                                            {item.opsi.map((item, ke) => (
-                                                <div className="item-opsi" key={ke}>
-                                                    <div><input type="radio" id={`soal${index}-${ke}`} name={`soal${index}`}/>&nbsp;&nbsp;</div>
-                                                    <div>{huruf[ke]}.&nbsp;&nbsp;</div>
-                                                    <label htmlFor={`soal${index}-${ke}`}>{item}</label>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        }
+                        <SoalView soal={soal} tipe={tipe_soal} state={{kunci, onSetKunci}}/>
                     </div>
                     <div className="text-center">
                         <button className="btn btn-primary" onClick={gotoNext}>Kirim</button>

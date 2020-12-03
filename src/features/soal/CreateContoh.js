@@ -39,9 +39,8 @@ export default function CreateContoh({match}) {
     props={{onEnter, root_path}}
     state={{pertanyaan, setpertanyaan, kunci, setkunci, saving, setsaving}}/>
   }else if(parseInt(tipe_soal) === 4){
-    SoalForm = <ContohFormTipe4 createSoal={createContoh} useKunci={false} match={match} 
-    props={{onEnter, root_path}}
-    state={{pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving}}/>
+    SoalForm = <ContohFormTipe4 createSoal={createContoh} match={match} props={{onEnter, root_path}}
+    state={{pertanyaan, setpertanyaan, opsi, setopsi}}/>
   }else{
     SoalForm = <h4 className="alert alert-danger">Page Not Found</h4>
   }

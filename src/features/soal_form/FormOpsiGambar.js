@@ -2,18 +2,19 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { uploadFile, getDownloadURL, createOpsi } from "../soal/soalSlice";
+import {v4 as uuidv4} from "uuid"
 
-export default function FormOpsiGambar({match, props, createSoal, state}) {
-  const {colId, docId} = match.params
+export default function FormOpsiGambar({match, props, state}) {
+  const {colId, docId, index} = match.params
   const {root_path} = props
   const {fileDocument, setfileDocument, saving, setsaving, progress, setprogress} = state
 
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const onSubmit = (e) => {e.preventDefault();
-    // dispatch save data
-    const fileName = fileDocument.name
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const fileName = `${colId}/${docId}/${index}_${uuidv4()}-${Date.now()}`
     const task = uploadFile({fileDocument, fileName})
     setsaving(true)
     task.on('state_changed', (snapShot) => {
@@ -30,7 +31,6 @@ export default function FormOpsiGambar({match, props, createSoal, state}) {
         });
     })
   };
-  
   const onFileChange = (e) => {
     const file = e.target.files[0]
     console.log(file);
@@ -65,7 +65,10 @@ export default function FormOpsiGambar({match, props, createSoal, state}) {
           {
             saving ? 
             <button className="btn btn-primary" type="button" disabled>
-              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" /> Uploading... {progress}
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" /> 
+              { progress === 100 ? <span>Saving.... </span> :
+                  <span>Uploading... {progress}%</span> 
+              }
             </button> 
             :
             <button type="submit" className="btn btn-info">

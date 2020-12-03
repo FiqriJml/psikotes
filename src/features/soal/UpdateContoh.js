@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import ContohFormTipe4 from "../soal_form/ContohFormTipe4";
 import FormTipe1 from "../soal_form/FormTipe1";
 import FormTipe2 from "../soal_form/FormTipe2";
 import { getContohByIndex, updateContoh } from "./soalSlice";
@@ -20,6 +21,7 @@ export default function UpdateContoh({match}) {
         const {pertanyaan, opsi} = data
         setpertanyaan(pertanyaan)
         setopsi(opsi)
+        console.log(opsi)
     })
 }, [colId, docId, index, dispatch])
 
@@ -48,6 +50,10 @@ export default function UpdateContoh({match}) {
     SoalForm = <FormTipe2 createSoal={updateContoh} useKunci={false} match={match} 
     props={{onEnter, root_path}}
     state={{pertanyaan, setpertanyaan, opsi, setAllOpsi, kunci, setkunci, saving, setsaving}}/>
+  }else if(parseInt(tipe_soal) === 4){
+    SoalForm = <ContohFormTipe4 createSoal={updateContoh} useKunci={false} match={match} 
+    props={{onEnter, root_path}}
+    state={{pertanyaan, setpertanyaan, opsi, setopsi}}/>
   }else{
     SoalForm = <h4 className="alert alert-danger">Page Not Found</h4>
   }
