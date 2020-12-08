@@ -88,7 +88,7 @@ export default function Menu({active_link}) {
             </li>
 
             <li className="nav-item">
-              <a href="/ujian/EYDJLmqat6gQP3Z0Z5zi/0" className={`nav-link ${active_link === 6 ? "active": ""}`}>
+              <a href="/ujian" className={`nav-link ${active_link === 6 ? "active": ""}`}>
                 <i className="nav-icon fa fa-circle"></i>
                 <p>
                   Ujian

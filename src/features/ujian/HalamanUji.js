@@ -7,8 +7,8 @@ import {fetchData, getColData, getData, hasFetch} from "../section/sectionSlice"
 import {SoalView, ContohView} from './soal_view'
 
 function HalamanUji({match}) {
-    const {colId, index} = match.params
-    
+    const {userId, colId, index} = match.params
+    console.log(userId)
 
     const [mulai, setmulai] = useState(false)
     const [kunci, setkunci] = useState([])
@@ -22,6 +22,7 @@ function HalamanUji({match}) {
             dispatch(fetchData(colId))
         }
     }, [dispatch, hasFetching, colId])
+
     const dataSection = useSelector(getData)
     const dataCol = useSelector(getColData)
     if(!hasFetching){  
