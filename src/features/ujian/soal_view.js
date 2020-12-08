@@ -39,7 +39,7 @@ export function SoalView(props){
 }
 
 function SoalTipe1(soal, CONTOH, {state}) {
-    const {kunci, onSetKunci} = state
+    const {jawaban, onSetJawaban} = state
     return (  
         soal.map((item, index) => (
             <div className="ujian-item-soal" key={index}>
@@ -58,8 +58,8 @@ function SoalTipe1(soal, CONTOH, {state}) {
                                 <div className="item-opsi" key={ke}>
                                     <div><input 
                                         value={huruf[ke]} 
-                                        checked={kunci[index] === huruf[ke]} 
-                                        onChange={(e) => onSetKunci(e, index) }
+                                        checked={jawaban[index] === huruf[ke]} 
+                                        onChange={(e) => onSetJawaban(e, index) }
                                         type="radio" id={`soal${index}-${ke}`} name={`soal${index}`}/>&nbsp;&nbsp;</div>
                                     <div>{huruf[ke]}.&nbsp;&nbsp;</div>
                                     <label htmlFor={`soal${index}-${ke}`}>{item}</label>
@@ -74,7 +74,7 @@ function SoalTipe1(soal, CONTOH, {state}) {
 }
 
 function SoalTipe2(soal, CONTOH, {state}) {
-    const {kunci, onSetKunci} = state
+    const {jawaban, onSetJawaban} = state
     return ( 
         soal.map((item, index) => (
             <div className="ujian-item-soal" key={index}>
@@ -86,8 +86,8 @@ function SoalTipe2(soal, CONTOH, {state}) {
                             <div>{index+1}.&nbsp;&nbsp;.....................</div>
                             : 
                             <div><input 
-                            value={kunci[index]} 
-                            onChange={(e) => onSetKunci(e, index) }
+                            value={jawaban[index]} 
+                            onChange={(e) => onSetJawaban(e, index) }
                             type="text" placeholder="isi disini.."/></div>
                         }
                     </div>
@@ -98,7 +98,7 @@ function SoalTipe2(soal, CONTOH, {state}) {
 }
 
 function SoalTipe3(soal, CONTOH, {state}) {
-    const {kunci, onSetKunci} = state
+    const {jawaban, onSetJawaban} = state
     return ( 
         soal.map((item, index) => (
             <div className="ujian-item-soal" key={index}>
@@ -110,8 +110,8 @@ function SoalTipe3(soal, CONTOH, {state}) {
                             5 &nbsp;&nbsp; 6 &nbsp;&nbsp; 7 &nbsp;&nbsp; 8 &nbsp;&nbsp; 9 &nbsp;&nbsp; 0</div>
                             : 
                             <div><input 
-                            value={kunci[index]} 
-                            onChange={(e) => onSetKunci(e, index) }
+                            value={jawaban[index]} 
+                            onChange={(e) => onSetJawaban(e, index) }
                              type="number" placeholder="isi disini.." /></div>
                         }
                     </div>
@@ -122,7 +122,7 @@ function SoalTipe3(soal, CONTOH, {state}) {
 }
 
 function SoalTipe4(soal, CONTOH, {state}) {
-    const {kunci, onSetKunci} = state
+    const {jawaban, onSetJawaban} = state
     
     return ( 
         soal.map((item, index) => (
@@ -139,9 +139,9 @@ function SoalTipe4(soal, CONTOH, {state}) {
                                 <div className="form-group row mt-2">
                                     <div className="col-sm-10">
                                     <select
-                                        value={kunci[index]} 
-                                        onChange={(e) => onSetKunci(e, index) }
-                                        placeholder="Kunci Jawaban">
+                                        value={jawaban[index]} 
+                                        onChange={(e) => onSetJawaban(e, index) }
+                                        placeholder="jawaban Jawaban">
                                         <option value="" disabled>-pilih-</option>
                                         <option value="a">a</option>
                                         <option value="b">b</option>

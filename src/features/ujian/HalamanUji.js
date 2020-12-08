@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {fetchData, getColData, getData, hasFetch} from "../section/sectionSlice"
+import { saveJawaban } from './pesertaAction';
 import {SoalView, ContohView} from './soal_view'
 
 function HalamanUji({match}) {
@@ -11,7 +12,7 @@ function HalamanUji({match}) {
     console.log(userId)
 
     const [mulai, setmulai] = useState(false)
-    const [kunci, setkunci] = useState([])
+    const [jawaban, setjawaban] = useState([])
 
     const dispatch = useDispatch();
     const history = useHistory()
@@ -39,7 +40,10 @@ function HalamanUji({match}) {
     const gotoNext = () => {
         if(dataSection.length > parseInt(index)+1){
             const section = parseInt(index) + 1
-            const path = `/ujian/${colId}/${section}`
+            const path = `/ujian/${userId}/${colId}/${section}`
+            // save jawaban 
+            const data = {jawaban}
+            saveJawaban({data, userId, index})
             setmulai(false)
             history.push(path)
         }else{
@@ -49,14 +53,14 @@ function HalamanUji({match}) {
     const gotoSoal = () => {
         setmulai(true)
         const array = new Array(soal.length).fill("");
-        setkunci(array)
+        setjawaban(array)
     }
     
-    const onSetKunci = (e, i) => {
-        let newKunci = [...kunci]
+    const onSetJawaban = (e, i) => {
+        let newjawaban = [...jawaban]
         console.log(i)
-        newKunci[i] = e.target.value
-        setkunci(newKunci)
+        newjawaban[i] = e.target.value
+        setjawaban(newjawaban)
     }
     return (
         <div className="container">
@@ -68,7 +72,7 @@ function HalamanUji({match}) {
             <div className="ujian border">
                 <h5>Contoh</h5>
                 <div className="ujian-body">
-                    <ContohView soal={contoh} tipe={tipe_soal} state={{kunci, onSetKunci}} />
+                    <ContohView soal={contoh} tipe={tipe_soal} state={{jawaban, onSetJawaban}} />
                 </div>
                 { mulai ? null:
                     <div className="text-center">
@@ -82,7 +86,7 @@ function HalamanUji({match}) {
                 <div className="ujian border">
                     <h5>Soal</h5>
                     <div className="ujian-body">
-                        <SoalView soal={soal} tipe={tipe_soal} state={{kunci, onSetKunci}}/>
+                        <SoalView soal={soal} tipe={tipe_soal} state={{jawaban, onSetJawaban}}/>
                     </div>
                     <div className="text-center">
                         <button className="btn btn-primary" onClick={gotoNext}>Kirim</button>
