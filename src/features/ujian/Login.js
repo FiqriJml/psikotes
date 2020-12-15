@@ -8,16 +8,14 @@ export default function Login() {
     const [nama, setnama] = useState("")
     const history = useHistory()
 
-
     const onSubmit = async e => {
         e.preventDefault()
         const data = {
-            nama
+            nama, index: 0
         }
         const userId = await register({ data })
-        console.log(userId)
         if(userId){
-            history.push(`ujian/${userId}/${colId}/0`)
+            history.push(`ujian/${userId}/${colId}`)
         }
     }
     return (

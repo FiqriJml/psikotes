@@ -4,7 +4,6 @@ const huruf = ['a','b','c','d','e']
 
 export function ContohView(props){
     const {soal, tipe, state} = props
-    console.log(state)
     let content = <p>No data</p>
     if(tipe === 1){
         content = SoalTipe1(soal, true, {state})

@@ -7,7 +7,7 @@ export default function Ujian() {
     const root_path = "/ujian"
     return (
         <Switch>
-            <Route path={`${root_path}/:userId/:colId/:index`}  component={HalamanUji}/>
+            <Route path={`${root_path}/:userId/:colId`}  component={HalamanUji}/>
             <Route path={`${root_path}`}  component={Login}/>
         </Switch>
     )
